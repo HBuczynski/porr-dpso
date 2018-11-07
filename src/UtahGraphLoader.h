@@ -11,6 +11,8 @@
 
 class UtahGraphLoader {
 public:
+    UtahGraphLoader(std::string name);
+
     UtahGraphLoader(std::string name, int nodes);
 
     Graph load();
@@ -20,7 +22,7 @@ public:
 private:
     const std::string path;
     Graph graph;
-    const int nodes_cnt;
+    int nodes_cnt;
 
     void load_nodes();
 

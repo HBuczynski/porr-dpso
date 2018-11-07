@@ -42,5 +42,5 @@ with open(path + "_edges.txt") as f:
 
 print("drawing...")
 pos = nx.get_node_attributes(graph, 'pos')
-nx.draw(graph, pos, with_labels=True)
+nx.draw(graph, pos, with_labels=True, node_size=80)
 plt.show()
