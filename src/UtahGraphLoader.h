@@ -15,6 +15,8 @@ public:
 
     Graph load();
 
+    void show() const;
+
 private:
     const std::string path;
     Graph graph;

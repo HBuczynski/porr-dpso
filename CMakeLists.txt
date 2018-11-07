@@ -3,6 +3,8 @@ project(porr_dpso)
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_compile_definitions(ENABLE_DRAWING)
+
 add_executable(porr_dpso
         src/main.cpp
         src/graph/Edge.cpp

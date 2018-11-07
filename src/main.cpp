@@ -6,9 +6,10 @@
 int main() {
     std::cout << "porr-dpso" << std::endl;
 
-    auto graph = UtahGraphLoader("OL", 50).load();
+    auto utahGraphLoader = UtahGraphLoader("OL", 1000);
+    auto graph = utahGraphLoader.load();
+    utahGraphLoader.show();
     graph.consolidate();
-    std::cout << graph;
 
     return 0;
 }

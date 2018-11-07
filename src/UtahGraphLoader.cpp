@@ -2,9 +2,11 @@
 // Created by mariusz on 07.11.18.
 //
 
+#include <unistd.h>
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
+#include <zconf.h>
 #include "UtahGraphLoader.h"
 
 namespace {
@@ -67,4 +69,20 @@ void UtahGraphLoader::load_edges() {
     }
 
     fs.close();
+}
+
+void UtahGraphLoader::show() const {
+#ifdef ENABLE_DRAWING
+    auto pid = fork();
+    if (pid > 0)
+        return;
+    if (pid < 0)
+        throw std::runtime_error("Error in forking process");
+
+    execl("tools/draw_graph.py", "draw_graph.py",
+          path.c_str(),
+          std::to_string(nodes_cnt).c_str(),
+          (char *) nullptr);
+    std::cout << "Error in spawning tools process" << std::endl;
+#endif
 }
