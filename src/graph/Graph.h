@@ -10,11 +10,15 @@
 
 class Graph {
 public:
-    explicit Graph(unsigned long size);
+    explicit Graph(int size);
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &graph);
 
-    void addEdge(unsigned long id, Edge edge);
+    void addNode(int id, float x, float y);
+
+    void addEdge(int from, const Edge edge);
+
+    void consolidate();
 
 private:
     std::vector<Node> nodes;

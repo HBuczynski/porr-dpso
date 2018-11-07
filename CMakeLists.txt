@@ -9,4 +9,6 @@ add_executable(porr_dpso
         src/graph/Edge.h
         src/graph/Graph.cpp
         src/graph/Graph.h
-        src/graph/Node.h)
+        src/graph/Node.h
+        src/UtahGraphLoader.cpp
+        src/UtahGraphLoader.h)
