@@ -4,7 +4,7 @@
 
 #include <fstream>
 #include <iostream>
-#include <zconf.h>
+#include <unistd.h>
 #include "UtahGraphLoader.h"
 
 namespace {
