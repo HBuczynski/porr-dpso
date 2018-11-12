@@ -78,8 +78,8 @@ void UtahGraphLoader::load_edges() {
         fs >> id >> from >> to >> weight;
         if (fs) {
             if (from < nodes_cnt && to < nodes_cnt) {
-                graph.addEdge(from, {weight, to});
-                graph.addEdge(to, {weight, from});
+                graph.addEdge({from, to, weight});
+                graph.addEdge({to, from, weight});
             }
         } else
             break;

@@ -4,5 +4,13 @@
 
 #include "Edge.h"
 
-Edge::Edge(float weight, NodeID to)
-        : weight(weight), to(to) {}
+bool operator==(const Edge &lhs, const Edge &rhs) {
+    if (lhs.weight != rhs.weight)
+        return false;
+    if (lhs.from == rhs.from && lhs.to == rhs.to)
+        return true;
+    return lhs.from == rhs.to && lhs.to == rhs.from;
+}
+
+Edge::Edge(NodeID from, NodeID to, float weight)
+        : from(from), to(to), weight(weight) {}

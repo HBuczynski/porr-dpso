@@ -16,9 +16,13 @@ public:
 
     void addNode(int id, float x, float y);
 
-    void addEdge(int from, const Edge edge);
+    void addEdge(Edge edge);
 
     void consolidate();
+
+    int size() const;
+
+    const std::vector<Edge> &getEdges(const int id) const;
 
 private:
     std::vector<Node> nodes;

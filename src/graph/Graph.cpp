@@ -34,12 +34,12 @@ void Graph::addNode(int id, float x, float y) {
     nodes[id].y = y;
 }
 
-void Graph::addEdge(int from, const Edge edge) {
-    if (from < 0 || from >= nodes.size())
+void Graph::addEdge(const Edge edge) {
+    if (edge.from < 0 || edge.from >= nodes.size())
         throw std::invalid_argument("Node do not belong to graph");
     assert(edge.to < nodes.size() && edge.to >= 0 && "Invalid edge");
 
-    nodes[from].edges.push_back(std::move(edge));
+    nodes[edge.from].edges.push_back(std::move(edge));
 }
 
 void Graph::consolidate() {
@@ -48,4 +48,14 @@ void Graph::consolidate() {
             return lhs.to <= rhs.to;
         });
     }
+}
+
+int Graph::size() const {
+    assert(nodes.size() < INT32_MAX && "Reimplement Graph::size()");
+    return static_cast<int>(nodes.size());
+}
+
+const std::vector<Edge> & Graph::getEdges(const int id) const {
+    assert(id >= 0 && id < nodes.size() && "ID do not belong to graph");
+    return nodes[id].edges;
 }

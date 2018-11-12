@@ -5,14 +5,32 @@
 #ifndef PORR_DPSO_EDGE_H
 #define PORR_DPSO_EDGE_H
 
+
+#include <functional>
+
 using NodeID = int;
 
 struct Edge {
-    float weight;
+    NodeID from;
     NodeID to;
+    float weight;
 
-    Edge(float weight, NodeID to);
+    friend bool operator==(const Edge &lhs, const Edge &rhs);
+
+    Edge(NodeID from, NodeID to, float weight);
 };
 
+namespace std {
+    template<>
+    struct hash<Edge> {
+        const size_t operator()(const Edge &obj) const noexcept {
+            int lo = min(obj.from, obj.to);
+            int hi = min(obj.from, obj.to);
+            return hash<int>{}(lo)
+                   ^ (hash<int>{}(hi) << 2)
+                   ^ (hash<float>{}(obj.weight) << 2);
+        }
+    };
+}
 
 #endif //PORR_DPSO_EDGE_H

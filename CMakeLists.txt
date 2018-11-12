@@ -12,5 +12,5 @@ add_executable(porr_dpso
         src/graph/Graph.cpp
         src/graph/Graph.h
         src/graph/Node.h
-        src/UtahGraphLoader.cpp
-        src/UtahGraphLoader.h)
+        src/io/UtahGraphLoader.cpp
+        src/io/UtahGraphLoader.h src/dpso/DPSO.cpp src/dpso/DPSO.h src/dpso/Particle.cpp src/dpso/Particle.h src/dpso/DPSOEdge.cpp src/dpso/DPSOEdge.h)

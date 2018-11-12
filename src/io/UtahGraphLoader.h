@@ -7,7 +7,7 @@
 
 
 #include <string>
-#include "graph/Graph.h"
+#include "../graph/Graph.h"
 
 class UtahGraphLoader {
 public:
