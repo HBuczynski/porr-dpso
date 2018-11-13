@@ -9,18 +9,21 @@
 #include "../graph/Edge.h"
 
 struct DPSOEdge {
-    float propability;
     Edge edge;
+    float propability;
 
     friend bool operator==(const DPSOEdge &lhs, const DPSOEdge &rhs);
+
+    friend DPSOEdge operator*(DPSOEdge dpsoEdge, float scalar);
+
+    friend DPSOEdge operator*(float scalar, const DPSOEdge &dpsoEdge);
 };
 
 namespace std {
     template<>
     struct hash<DPSOEdge> {
         const size_t operator()(const DPSOEdge &obj) const noexcept {
-            return hash<Edge>{}(obj.edge)
-                   ^ (hash<float>{}(obj.propability) << 1);
+            return hash<Edge>{}(obj.edge);
         }
     };
 }

@@ -7,3 +7,13 @@
 bool operator==(const DPSOEdge &lhs, const DPSOEdge &rhs) {
     return lhs.propability == rhs.propability && lhs.edge == rhs.edge;
 }
+
+DPSOEdge operator*(DPSOEdge dpsoEdge, float scalar) {
+    dpsoEdge.propability *= scalar;
+    return dpsoEdge;
+}
+
+DPSOEdge operator*(float scalar, const DPSOEdge &dpsoEdge) {
+    return dpsoEdge * scalar;
+}
+

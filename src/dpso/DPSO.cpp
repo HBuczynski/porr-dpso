@@ -5,8 +5,8 @@
 #include <cassert>
 #include "DPSO.h"
 
-DPSO::DPSO(const Graph &graph, int begin, int end, int population_cnt, int iterations)
-        : graph(graph), begin(begin), end(end), population_cnt(population_cnt), iterations(iterations) {
+DPSO::DPSO(const Graph &graph, int begin, int end, const DPSOConfig config)
+        : graph(graph), begin(begin), end(end), config(config) {
     auto validate_endpoints = [&graph](int id, std::string name) {
         if (id < 0 || id >= graph.size())
             throw std::invalid_argument(name + " node do not belong to graph");
@@ -17,25 +17,30 @@ DPSO::DPSO(const Graph &graph, int begin, int end, int population_cnt, int itera
 
 void DPSO::solve() {
     build_swarm();
-    update_best();
-    for (auto i = 0; i < iterations; ++i) {
-        // TODO calculate new Velocity
-        // TODO calculate new Position
-        // TODO make path complete
-        ;
+    update_best_position();
+    for (auto i = 0; i < config.iterations; ++i) {
+        for (auto &particle : swarm) {
+            particle.calculate_velocity(best_position, config);
+            // TODO calculate new Position
+            // TODO make path complete
+        }
+        update_best_position();
     }
 }
 
 void DPSO::build_swarm() {
     assert (swarm.empty());
-    for (auto i = 0; i < population_cnt; ++i)
-        swarm.emplace(graph, begin, end);
+    for (auto i = 0; i < config.population_cnt; ++i)
+        swarm.emplace_back(graph, begin, end);
 }
 
-void DPSO::update_best() {
+void DPSO::update_best_position() {
+    std::sort(swarm.begin(), swarm.end(), [](const auto &lhs, const auto &rhs) {
+        return lhs.best_path_length < rhs.best_path_length;
+    });
     auto length = swarm.begin()->best_path_length;
     if (length < best_path_length) {
         best_path_length = length;
-        best_path = swarm.begin()->best_path;
+        best_position = swarm.begin()->best_position;
     }
 }

@@ -12,8 +12,9 @@ int main() {
     utahGraphLoader.show();
     graph.consolidate();
 
-    auto dpso = DPSO(graph, 6, 26, 5, 10);
-    dpso.solve();
+    auto dpso_config = DPSOConfig();
+    auto solver = DPSO(graph, 6, 26, dpso_config);
+    solver.solve();
 
     return 0;
 }

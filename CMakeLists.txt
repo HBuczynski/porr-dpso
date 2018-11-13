@@ -13,4 +13,4 @@ add_executable(porr_dpso
         src/graph/Graph.h
         src/graph/Node.h
         src/io/UtahGraphLoader.cpp
-        src/io/UtahGraphLoader.h src/dpso/DPSO.cpp src/dpso/DPSO.h src/dpso/Particle.cpp src/dpso/Particle.h src/dpso/DPSOEdge.cpp src/dpso/DPSOEdge.h)
+        src/io/UtahGraphLoader.h src/dpso/DPSO.cpp src/dpso/DPSO.h src/dpso/Particle.cpp src/dpso/Particle.h src/dpso/DPSOEdge.cpp src/dpso/DPSOEdge.h src/dpso/DPSOConfig.h)
