@@ -22,7 +22,7 @@ struct DPSOEdge {
 namespace std {
     template<>
     struct hash<DPSOEdge> {
-        const size_t operator()(const DPSOEdge &obj) const noexcept {
+        size_t operator()(const DPSOEdge &obj) const noexcept {
             return hash<Edge>{}(obj.edge);
         }
     };

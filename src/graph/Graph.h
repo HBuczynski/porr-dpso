@@ -14,7 +14,7 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Graph &graph);
 
-    void addNode(int id, float x, float y);
+    void addNode(NodeID id, float x, float y);
 
     void addEdge(Edge edge);
 
@@ -22,7 +22,7 @@ public:
 
     int size() const;
 
-    const std::vector<Edge> &getEdges(const int id) const;
+    const std::vector<Edge> &getEdges(NodeID id) const;
 
 private:
     std::vector<Node> nodes;

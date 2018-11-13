@@ -22,7 +22,7 @@ public:
 private:
     const std::string path;
     Graph graph;
-    int nodes_cnt;
+    unsigned int nodes_cnt;
 
     void load_nodes();
 

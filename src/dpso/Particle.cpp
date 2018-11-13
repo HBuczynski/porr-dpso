@@ -42,8 +42,8 @@ void Particle::update_best_position() {
 
 float Particle::calculate_path_length() {
     float path_length = 0.0f;
-    for (auto const&[e, p] : position) {
-        path_length += e.weight;
+    for (auto const& e : position) {
+        path_length += e.edge.weight;
     }
     return path_length;
 }

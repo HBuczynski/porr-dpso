@@ -8,7 +8,7 @@
 
 #include <functional>
 
-using NodeID = int;
+using NodeID = unsigned int;
 
 struct Edge {
     NodeID from;
@@ -23,7 +23,7 @@ struct Edge {
 namespace std {
     template<>
     struct hash<Edge> {
-        const size_t operator()(const Edge &obj) const noexcept {
+        size_t operator()(const Edge &obj) const noexcept {
             int lo = min(obj.from, obj.to);
             int hi = min(obj.from, obj.to);
             return hash<int>{}(lo)

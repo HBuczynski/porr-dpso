@@ -14,7 +14,7 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph) {
     }
 
     os << "ID | Neighbours\n";
-    for (auto id = 0; id < graph.nodes.size(); id++) {
+    for (auto id = 0u; id < graph.nodes.size(); id++) {
         os << id << " -> ";
         for (auto edge : graph.nodes[id].edges)
             os << edge.to << " ";
@@ -26,8 +26,8 @@ std::ostream &operator<<(std::ostream &os, const Graph &graph) {
 Graph::Graph(int size)
         : nodes(size) {}
 
-void Graph::addNode(int id, float x, float y) {
-    if (id < 0 || id >= nodes.size())
+void Graph::addNode(NodeID id, float x, float y) {
+    if (id >= nodes.size())
         throw std::invalid_argument("Node ID out of bound");
 
     nodes[id].x = x;
@@ -35,9 +35,9 @@ void Graph::addNode(int id, float x, float y) {
 }
 
 void Graph::addEdge(const Edge edge) {
-    if (edge.from < 0 || edge.from >= nodes.size())
+    if (edge.from >= nodes.size())
         throw std::invalid_argument("Node do not belong to graph");
-    assert(edge.to < nodes.size() && edge.to >= 0 && "Invalid edge");
+    assert(edge.to < nodes.size() && "Invalid edge");
 
     nodes[edge.from].edges.push_back(std::move(edge));
 }
@@ -55,7 +55,7 @@ int Graph::size() const {
     return static_cast<int>(nodes.size());
 }
 
-const std::vector<Edge> & Graph::getEdges(const int id) const {
-    assert(id >= 0 && id < nodes.size() && "ID do not belong to graph");
+const std::vector<Edge> & Graph::getEdges(const NodeID id) const {
+    assert(id < nodes.size() && "ID do not belong to graph");
     return nodes[id].edges;
 }

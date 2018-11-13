@@ -55,9 +55,9 @@ Graph UtahGraphLoader::load() {
 void UtahGraphLoader::load_nodes() {
     std::ifstream fs = getFileHandler(path + "_nodes.txt");
 
-    int id;
+    NodeID id;
     float x, y;
-    for (auto i = 0; i < nodes_cnt; ++i) {
+    for (auto i = 0u; i < nodes_cnt; ++i) {
         fs >> id >> x >> y;
         if (fs)
             graph.addNode(id, x, y);
@@ -71,8 +71,8 @@ void UtahGraphLoader::load_nodes() {
 void UtahGraphLoader::load_edges() {
     std::ifstream fs = getFileHandler(path + "_edges.txt");
 
-    int id;
-    int from, to;
+    NodeID id;
+    NodeID from, to;
     float weight;
     while (fs) {
         fs >> id >> from >> to >> weight;
