@@ -22,6 +22,8 @@ struct Particle {
 
     void calculate_velocity(EdgesSet global_best_position, const DPSOConfig &config);
 
+    void calculate_new_position(const DPSOConfig &config);
+
     EdgesSet position;
     EdgesSet best_position;
     float best_path_length;

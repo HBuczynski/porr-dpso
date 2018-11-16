@@ -42,7 +42,7 @@ void Particle::update_best_position() {
 
 float Particle::calculate_path_length() {
     float path_length = 0.0f;
-    for (auto const& e : position) {
+    for (auto const &e : position) {
         path_length += e.edge.weight;
     }
     return path_length;
@@ -72,4 +72,25 @@ void Particle::calculate_velocity(EdgesSet global_best_position, const DPSOConfi
         particle_best_position.erase(e);
     for (const auto &e : particle_best_position)
         velocity.insert(e * config.cognitive_coefficient * random(generator));
+}
+
+void Particle::calculate_new_position(const DPSOConfig &config) {
+    std::random_device random_device;
+    std::mt19937 generator(random_device());
+    std::uniform_real_distribution<> random(0.0, 1.0);
+
+    EdgesSet new_position{};
+
+    // Filter edges from velocity
+    for (const auto &e : velocity) {
+        if (random(generator) <= e.propability)
+            new_position.insert(e);
+    }
+
+    // Filter edges from current position
+    for (const auto &e : position) {
+        if (random(generator) <= random(generator) * config.previous_pos_impact_coefficient)
+            new_position.insert(e);
+    }
+    position = new_position;
 }

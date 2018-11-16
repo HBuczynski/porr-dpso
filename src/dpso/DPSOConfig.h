@@ -13,6 +13,7 @@ struct DPSOConfig {
     float social_coefficient = 0.5f;
     float cognitive_coefficient = 0.5f;
     float swarm_inertion = 0.5f;
+    float previous_pos_impact_coefficient = 0.5f;
 };
 
 
