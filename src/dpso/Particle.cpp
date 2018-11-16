@@ -57,7 +57,7 @@ void Particle::calculate_velocity(EdgesSet global_best_position, const DPSOConfi
     // temporary variable due to const iterator in for loop
     EdgesSet new_velocity{};
     for (auto &v : velocity)
-        new_velocity.insert(v * config.swarm_inertion * random(generator));
+        new_velocity.insert(v * config.swarm_inertion);
     velocity = new_velocity;
 
     // social
