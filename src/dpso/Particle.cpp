@@ -4,6 +4,7 @@
 
 #include "Particle.h"
 #include "DPSOConfig.h"
+#include "Astar.h"
 #include <random>
 #include <bits/unordered_set.h>
 #include <unordered_set>
@@ -93,4 +94,16 @@ void Particle::calculate_new_position(const DPSOConfig &config) {
             new_position.insert(e);
     }
     position = new_position;
+}
+
+void Particle::close_new_path(Graph graph, NodeID begin, NodeID end) {
+    for (const auto de : position) {
+        graph.change_edge_weight(de.edge.from, de.edge.to, 0.0f);
+        graph.change_edge_weight(de.edge.to, de.edge.from, 0.0f);
+    }
+
+    auto path_finder = Astar(graph, begin, end);
+    auto path = path_finder.solve();
+
+    // TODO update particle position by adding missing elements in respect to ideal path
 }

@@ -22,7 +22,7 @@ void DPSO::solve() {
         for (auto &particle : swarm) {
             particle.calculate_velocity(best_position, config);
             particle.calculate_new_position(config);
-            // TODO make path complete
+            particle.close_new_path(graph, begin, end);
         }
         update_best_position();
     }

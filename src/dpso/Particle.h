@@ -24,6 +24,8 @@ struct Particle {
 
     void calculate_new_position(const DPSOConfig &config);
 
+    void close_new_path(Graph graph, NodeID begin, NodeID end);
+
     EdgesSet position;
     EdgesSet best_position;
     float best_path_length;
