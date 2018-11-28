@@ -30,11 +30,11 @@ std::vector<NodeID> Astar::solve() {
         for (const auto &edge_out : graph.getEdges(current)) {
             auto neighbour = edge_out.to;
 
-            if (closed_set.count(neighbour) != 0)
+            if (std::find(closed_set.begin(), closed_set.end(), neighbour) != closed_set.end())
                 continue;
 
             auto distance_from_start_to_neighbour = score_from_start[current] + edge_out.weight;
-            if (open_set.count(neighbour) == 0)
+            if (std::find(open_set.begin(), open_set.end(), neighbour) == open_set.end())
                 open_set.insert(neighbour);
             else if (distance_from_start_to_neighbour >= score_from_start[neighbour])
                 continue;

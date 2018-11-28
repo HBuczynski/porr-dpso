@@ -5,7 +5,7 @@
 #include <cassert>
 #include "DPSO.h"
 
-DPSO::DPSO(const Graph &graph, int begin, int end, const DPSOConfig config)
+DPSO::DPSO(const Graph &graph, NodeID begin, NodeID end, DPSOConfig config)
         : graph(graph), begin(begin), end(end), config(config) {
     auto validate_endpoints = [&graph](int id, std::string name) {
         if (id < 0 || id >= graph.size())

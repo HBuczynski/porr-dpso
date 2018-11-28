@@ -15,7 +15,7 @@ using Swarm = std::vector<Particle>;
 
 class DPSO {
 public:
-    DPSO(const Graph &graph, int begin, int end, DPSOConfig config);
+    DPSO(const Graph &graph, NodeID begin, NodeID end, DPSOConfig config);
 
     void solve();
 
@@ -29,8 +29,8 @@ private:
 
     void update_best_position();
 
-    const int begin;
-    const int end;
+    NodeID begin;
+    NodeID end;
     const DPSOConfig config;
 };
 

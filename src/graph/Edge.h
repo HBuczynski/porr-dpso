@@ -27,7 +27,7 @@ namespace std {
             int lo = min(obj.from, obj.to);
             int hi = min(obj.from, obj.to);
             return hash<int>{}(lo)
-                   ^ (hash<int>{}(hi) << 2)
+                   ^ (hash<int>{}(hi) << 1)
                    ^ (hash<float>{}(obj.weight) << 2);
         }
     };

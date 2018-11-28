@@ -96,14 +96,27 @@ void Particle::calculate_new_position(const DPSOConfig &config) {
     position = new_position;
 }
 
-void Particle::close_new_path(Graph graph, NodeID begin, NodeID end) {
+void Particle::close_new_path(const Graph &graph, NodeID begin, NodeID end) {
+    auto g = graph;
     for (const auto de : position) {
-        graph.change_edge_weight(de.edge.from, de.edge.to, 0.0f);
-        graph.change_edge_weight(de.edge.to, de.edge.from, 0.0f);
+        g.change_edge_weight(de.edge.from, de.edge.to, 0.0f);
+        g.change_edge_weight(de.edge.to, de.edge.from, 0.0f);
     }
 
-    auto path_finder = Astar(graph, begin, end);
+    auto path_finder = Astar(g, begin, end);
     auto path = path_finder.solve();
 
-    // TODO update particle position by adding missing elements in respect to ideal path
+    for (auto i = 1u; i < path.size(); ++i) {
+        auto from = path[i - 1];
+        auto to = path[i];
+
+        const auto &edges = graph.getEdges(from);
+        auto edge = std::find_if(edges.begin(), edges.end(), [to](const auto& obj) {
+            return obj.to == to;
+        });
+
+        position.insert(DPSOEdge{Edge{from, to, edge->weight}, 1.0});
+    }
+
+    update_best_position();
 }
