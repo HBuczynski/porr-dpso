@@ -13,24 +13,26 @@ bool operator<(const Particle &lhs, const Particle &rhs) {
     return lhs.best_path_length < rhs.best_path_length;
 }
 
-Particle::Particle(const Graph &graph, int from, const int to)
+Particle::Particle(const Graph &graph, const NodeID from, const NodeID to)
         : position(), best_position(), best_path_length(std::numeric_limits<float>::max()) {
+    build_first_path(graph);
+    close_new_path(graph, from, to);
+}
+
+void Particle::build_first_path(const Graph &graph) {
     std::random_device random_device;
     std::mt19937 generator(random_device());
+    std::uniform_int_distribution<> random_node(0, graph.size() - 1);
 
-    // TODO build first random path to target
-    while (from != to) {
-        const auto &edges = graph.getEdges(from);
-        std::uniform_int_distribution<> random(0, static_cast<int>(edges.size() - 1));
-        auto next_edge_idx = random(generator);
-        auto &edge = edges[next_edge_idx];
+    for (auto i = 0; i < 10; ++i) {
+        auto node_id = static_cast<NodeID>(random_node(generator));
+        const auto &edges = graph.getEdges(node_id);
+
+        auto edge_idx = random_node(generator) % edges.size();
+        auto edge = edges[edge_idx];
         if (position.find({edge, 1.0}) == position.end())
             position.insert({edge, 1.0});
-
-        from = edge.to;
     }
-
-    update_best_position();
 }
 
 void Particle::update_best_position() {
@@ -103,6 +105,7 @@ void Particle::close_new_path(const Graph &graph, NodeID begin, NodeID end) {
         g.change_edge_weight(de.edge.to, de.edge.from, 0.0f);
     }
 
+    // TODO this alg in future should be changed to sth more random
     auto path_finder = Astar(g, begin, end);
     auto path = path_finder.solve();
 
@@ -111,7 +114,7 @@ void Particle::close_new_path(const Graph &graph, NodeID begin, NodeID end) {
         auto to = path[i];
 
         const auto &edges = graph.getEdges(from);
-        auto edge = std::find_if(edges.begin(), edges.end(), [to](const auto& obj) {
+        auto edge = std::find_if(edges.begin(), edges.end(), [to](const auto &obj) {
             return obj.to == to;
         });
 
