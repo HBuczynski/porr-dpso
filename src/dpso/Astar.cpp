@@ -19,8 +19,7 @@ Astar::Astar(const Graph &graph, NodeID from, NodeID to)
 
 std::vector<NodeID> Astar::solve() {
     while (!open_set.empty()) {
-        // TODO sort by score_total_heuristic, current = n with lowest score_total_heuristic
-        auto current = *open_set.begin();
+        auto current = smallest_in_open_set();
         if (current == to)
             return reconstruct_path(current);
 
@@ -46,6 +45,17 @@ std::vector<NodeID> Astar::solve() {
         }
     }
     return {};
+}
+
+NodeID Astar::smallest_in_open_set() {
+    NodeID id = *open_set.begin();
+    float value = std::numeric_limits<float>::max();
+    for (const auto &n : open_set) {
+        auto v = score_total_heuristic[n];
+        if (v < value)
+            id = n;
+    }
+    return id;
 }
 
 std::vector<NodeID> Astar::reconstruct_path(NodeID current) const {

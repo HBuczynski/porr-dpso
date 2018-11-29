@@ -11,12 +11,12 @@
 
 class Astar {
 public:
-    Astar(const Graph& graph, NodeID from, NodeID to);
+    Astar(const Graph &graph, NodeID from, NodeID to);
 
     std::vector<NodeID> solve();
 
 private:
-    const Graph& graph;
+    const Graph &graph;
     NodeID from;
     NodeID to;
 
@@ -25,6 +25,8 @@ private:
     std::unordered_map<NodeID, NodeID> came_from;
     std::unordered_map<NodeID, float> score_from_start;
     std::unordered_map<NodeID, float> score_total_heuristic;
+
+    NodeID smallest_in_open_set();
 
     std::vector<NodeID> reconstruct_path(NodeID current) const;
 };
