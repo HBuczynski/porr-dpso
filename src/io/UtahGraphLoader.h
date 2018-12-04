@@ -18,7 +18,7 @@ public:
 
     Graph load();
 
-    void show(std::optional<EdgesSet> path_to_show) const;
+    void show(std::optional<EdgesSet> path_to_show=std::nullopt) const;
 
 
 private:

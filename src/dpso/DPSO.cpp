@@ -45,6 +45,6 @@ void DPSO::update_best_position() {
     }
 }
 
-const EdgesSet &DPSO::getBest_position() const {
+const EdgesSet &DPSO::get_best_position() const {
     return best_position;
 }

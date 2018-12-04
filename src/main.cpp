@@ -9,13 +9,13 @@ int main() {
 
     auto utahGraphLoader = UtahGraphLoader("OL", 30);
     auto graph = utahGraphLoader.load();
-    utahGraphLoader.show(std::nullopt);
+    utahGraphLoader.show();
     graph.consolidate();
 
     auto dpso_config = DPSOConfig();
     auto solver = DPSO(graph, 6, 26, dpso_config);
     solver.solve();
-    utahGraphLoader.show(solver.getBest_position());
+    utahGraphLoader.show(solver.get_best_position());
 
     return 0;
 }
