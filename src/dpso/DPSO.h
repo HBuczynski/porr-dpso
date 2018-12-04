@@ -23,6 +23,10 @@ private:
     const Graph graph;
     Swarm swarm;
     EdgesSet best_position;
+public:
+    const EdgesSet &getBest_position() const;
+
+private:
     float best_path_length = std::numeric_limits<float>::max();
 
     void build_swarm();

@@ -8,6 +8,7 @@
 
 #include <string>
 #include "../graph/Graph.h"
+#include "../dpso/Particle.h"
 
 class UtahGraphLoader {
 public:
@@ -18,6 +19,8 @@ public:
     Graph load();
 
     void show() const;
+
+    void show_results(const EdgesSet &edges_set) const;
 
 private:
     const std::string path;

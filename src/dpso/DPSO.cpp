@@ -44,3 +44,7 @@ void DPSO::update_best_position() {
         best_position = swarm.begin()->best_position;
     }
 }
+
+const EdgesSet &DPSO::getBest_position() const {
+    return best_position;
+}
