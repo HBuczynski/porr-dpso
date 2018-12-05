@@ -16,7 +16,7 @@ using EdgesSet = std::unordered_multiset<DPSOEdge>;
 struct Particle {
     friend bool operator<(const Particle &lhs, const Particle &rhs);
 
-    Particle(const Graph &graph, int from, int to);
+    Particle(const Graph &graph, NodeID from, NodeID to);
 
     void update_best_position();
 
@@ -24,12 +24,15 @@ struct Particle {
 
     void calculate_new_position(const DPSOConfig &config);
 
+    void close_new_path(const Graph &graph, NodeID begin, NodeID end);
+
     EdgesSet position;
     EdgesSet best_position;
     float best_path_length;
     EdgesSet velocity;
 
 private:
+    void build_first_path(const Graph &graph);
     float calculate_path_length();
 };
 

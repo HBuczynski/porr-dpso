@@ -5,6 +5,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <algorithm>
+#include <cmath>
 #include "Graph.h"
 
 std::ostream &operator<<(std::ostream &os, const Graph &graph) {
@@ -55,7 +56,24 @@ int Graph::size() const {
     return static_cast<int>(nodes.size());
 }
 
-const std::vector<Edge> & Graph::getEdges(const NodeID id) const {
+const std::vector<Edge> &Graph::getEdges(const NodeID id) const {
     assert(id < nodes.size() && "ID do not belong to graph");
     return nodes[id].edges;
+}
+
+void Graph::change_edge_weight(NodeID from, NodeID to, float weight) {
+    auto &edges = nodes[from].edges;
+    const auto &it = std::find_if(edges.begin(), edges.end(), [to](const auto &e) {
+        return e.to == to;
+    });
+    if (it == edges.end())
+        throw std::domain_error("Edge should exist");
+
+     it->weight = weight;
+}
+
+float Graph::straight_line(NodeID from, NodeID to) const {
+    auto dx2 = pow(nodes[from].x - nodes[to].x, 2.0);
+    auto dy2 = pow(nodes[from].y - nodes[to].y, 2.0);
+    return static_cast<float>(sqrt(dx2 + dy2));
 }

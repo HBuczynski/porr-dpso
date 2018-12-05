@@ -24,6 +24,10 @@ public:
 
     const std::vector<Edge> &getEdges(NodeID id) const;
 
+    void change_edge_weight(NodeID from, NodeID to, float weight);
+
+    float straight_line(NodeID from, NodeID to) const;
+
 private:
     std::vector<Node> nodes;
 };

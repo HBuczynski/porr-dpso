@@ -5,7 +5,9 @@
 #include <fstream>
 #include <iostream>
 #include <unistd.h>
+#include <sstream>
 #include "UtahGraphLoader.h"
+#include "../dpso/Particle.h"
 
 namespace {
     std::string resources = "resources/";
@@ -88,7 +90,7 @@ void UtahGraphLoader::load_edges() {
     fs.close();
 }
 
-void UtahGraphLoader::show() const {
+void UtahGraphLoader::show(std::optional<EdgesSet> path_to_show) const {
 #ifdef ENABLE_DRAWING
     auto pid = fork();
     if (pid > 0)
@@ -96,10 +98,24 @@ void UtahGraphLoader::show() const {
     if (pid < 0)
         throw std::runtime_error("Error in forking process");
 
-    execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
-          path.c_str(),
-          std::to_string(nodes_cnt).c_str(),
-          (char *) nullptr);
+    if(path_to_show){
+        std::stringstream selected_edges;
+        for (auto const &edge : path_to_show.value()) {
+            selected_edges << " " << edge.edge.from << " " << edge.edge.to;
+        }
+
+        execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
+              path.c_str(),
+              std::to_string(nodes_cnt).c_str(),
+              selected_edges.str().c_str(),
+              (char *) nullptr);
+    } else {
+        execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
+              path.c_str(),
+              std::to_string(nodes_cnt).c_str(),
+              (char *) nullptr);
+    }
     std::cout << "Error in spawning tools process" << std::endl;
 #endif
 }
+

@@ -5,7 +5,7 @@
 #include <cassert>
 #include "DPSO.h"
 
-DPSO::DPSO(const Graph &graph, int begin, int end, const DPSOConfig config)
+DPSO::DPSO(const Graph &graph, NodeID begin, NodeID end, DPSOConfig config)
         : graph(graph), begin(begin), end(end), config(config) {
     auto validate_endpoints = [&graph](int id, std::string name) {
         if (id < 0 || id >= graph.size())
@@ -22,7 +22,7 @@ void DPSO::solve() {
         for (auto &particle : swarm) {
             particle.calculate_velocity(best_position, config);
             particle.calculate_new_position(config);
-            // TODO make path complete
+            particle.close_new_path(graph, begin, end);
         }
         update_best_position();
     }
@@ -43,4 +43,8 @@ void DPSO::update_best_position() {
         best_path_length = length;
         best_position = swarm.begin()->best_position;
     }
+}
+
+const EdgesSet &DPSO::get_best_position() const {
+    return best_position;
 }

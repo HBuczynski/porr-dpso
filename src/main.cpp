@@ -15,6 +15,7 @@ int main() {
     auto dpso_config = DPSOConfig();
     auto solver = DPSO(graph, 6, 26, dpso_config);
     solver.solve();
+    utahGraphLoader.show(solver.get_best_position());
 
     return 0;
 }
