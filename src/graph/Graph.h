@@ -22,6 +22,8 @@ public:
 
     int size() const;
 
+    const Node &getNode(NodeID id) const;
+
     const std::vector<Edge> &getEdges(NodeID id) const;
 
     void change_edge_weight(NodeID from, NodeID to, float weight);

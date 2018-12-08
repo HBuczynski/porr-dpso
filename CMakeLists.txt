@@ -4,6 +4,9 @@ project(porr_dpso)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
+#set(CMAKE_CXX_FLAGS_DEBUG "-g")
+#set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 add_compile_definitions(ENABLE_DRAWING)
 
 add_executable(porr_dpso

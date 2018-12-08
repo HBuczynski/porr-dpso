@@ -25,7 +25,7 @@ namespace std {
     struct hash<Edge> {
         size_t operator()(const Edge &obj) const noexcept {
             int lo = min(obj.from, obj.to);
-            int hi = min(obj.from, obj.to);
+            int hi = max(obj.from, obj.to);
             return hash<int>{}(lo)
                    ^ (hash<int>{}(hi) << 1)
                    ^ (hash<float>{}(obj.weight) << 2);
