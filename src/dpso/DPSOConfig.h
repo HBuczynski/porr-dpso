@@ -8,7 +8,7 @@
 #include <string>
 
 struct DPSOConfig {
-    int population_cnt = 25;
+    int population_cnt = 50;
     int iterations = 20;
 
     float social_coefficient = 5.0f;

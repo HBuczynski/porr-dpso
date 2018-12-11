@@ -60,10 +60,10 @@ void Particle::calculate_velocity(EdgesSet global_best_position, const DPSOConfi
 
     // inertion
     // temporary variable due to const iterator in for loop
-    EdgesSet new_velocity{};
+    EdgesSet new_velocity;
     for (auto &v : velocity)
         new_velocity.insert(v * config.swarm_inertion);
-    velocity = new_velocity;
+    velocity = std::move(new_velocity);
 
     // social
     for (const auto &e : position)
@@ -84,7 +84,7 @@ void Particle::calculate_new_position(const DPSOConfig &config) {
     std::mt19937 generator(random_device());
     std::uniform_real_distribution<> random(0.0, 1.0);
 
-    EdgesSet new_position{};
+    EdgesSet new_position;
 
     // Filter edges from velocity
     for (const auto &e : velocity) {
@@ -97,7 +97,25 @@ void Particle::calculate_new_position(const DPSOConfig &config) {
         if (random(generator) <= random(generator) * config.previous_pos_impact_coefficient)
             new_position.insert(e);
     }
-    position = new_position;
+
+    // remove duplicates, leaving only the highest probability
+    position.clear();
+    if (new_position.empty())
+        return;
+
+    auto current_best = *new_position.begin();
+    static_assert(std::is_same<EdgesSet, std::unordered_multiset<DPSOEdge>>::value);
+    for (const auto &e : new_position) {
+        if (current_best.edge == e.edge) {
+            if (current_best.propability < e.propability)
+                current_best = e;
+        } else {
+            position.insert(current_best);
+            current_best = e;
+        }
+    }
+    if (position.find(current_best) == position.end())
+        position.insert(current_best);
 }
 
 std::vector<DPSOEdge> Particle::build_ordered_path(const Graph &graph, const NodeID end) const {
