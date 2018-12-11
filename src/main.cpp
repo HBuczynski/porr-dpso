@@ -7,7 +7,7 @@
 int main() {
     std::cout << "porr-dpso" << std::endl;
 
-    auto utahGraphLoader = UtahGraphLoader("OL", 30);
+    auto utahGraphLoader = UtahGraphLoader::get_instance();
     auto graph = utahGraphLoader.load();
     utahGraphLoader.show();
     graph.consolidate();

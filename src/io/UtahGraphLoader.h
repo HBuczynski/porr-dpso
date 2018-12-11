@@ -12,16 +12,20 @@
 
 class UtahGraphLoader {
 public:
-    UtahGraphLoader(std::string name);
 
-    UtahGraphLoader(std::string name, int nodes);
 
     Graph load();
 
     void show(std::optional<EdgesSet> path_to_show=std::nullopt) const;
 
+    static UtahGraphLoader &get_instance(){
+        static UtahGraphLoader instance = UtahGraphLoader(DPSOConfig());
+        return instance;
+    }
 
 private:
+    explicit UtahGraphLoader(DPSOConfig config);
+
     const std::string path;
     Graph graph;
     unsigned int nodes_cnt;
