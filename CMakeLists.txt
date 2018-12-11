@@ -1,24 +1,21 @@
 cmake_minimum_required(VERSION 3.12)
-project(porr_dpso)
+
+set(PROJECT_NAME porr_dpso)
+project(${PROJECT_NAME})
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
 add_compile_definitions(ENABLE_DRAWING)
 
-add_executable(porr_dpso
-        src/main.cpp
-        src/graph/Edge.cpp
-        src/graph/Edge.h
-        src/graph/Graph.cpp
-        src/graph/Graph.h
-        src/graph/Node.h
-        src/io/UtahGraphLoader.cpp
-        src/io/UtahGraphLoader.h
-        src/dpso/DPSO.cpp
-        src/dpso/DPSO.h
-        src/dpso/Particle.cpp
-        src/dpso/Particle.h
-        src/dpso/DPSOEdge.cpp
-        src/dpso/DPSOEdge.h
-        src/dpso/DPSOConfig.h src/dpso/Astar.cpp src/dpso/Astar.h)
+file(GLOB source_list "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/dpso/*.cpp"
+                      "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp")
+
+add_executable(${PROJECT_NAME} ${source_list} ${header_list})
