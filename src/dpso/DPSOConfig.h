@@ -9,7 +9,7 @@
 
 struct DPSOConfig {
     int population_cnt = 50;
-    int iterations = 20;
+    int iterations = 150;
 
     float social_coefficient = 5.0f;
     float cognitive_coefficient = 5.0f;
