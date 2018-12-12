@@ -3,6 +3,7 @@
 //
 
 #include <cassert>
+#include <iostream>
 #include "DPSO.h"
 
 DPSO::DPSO(const Graph &graph, NodeID begin, NodeID end, DPSOConfig config)
@@ -19,6 +20,7 @@ void DPSO::solve() {
     build_swarm();
     update_best_position();
     for (auto i = 0; i < config.iterations; ++i) {
+        std::cout << "Iteration=" << i << " gBest= " << best_path_length << "\n";
         for (auto &particle : swarm) {
             particle.calculate_velocity(best_position, config);
             particle.calculate_new_position(config);

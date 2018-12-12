@@ -34,6 +34,7 @@ struct Particle {
 private:
     void build_first_path(const Graph &graph);
     float calculate_path_length();
+    std::vector<DPSOEdge> build_ordered_path(const Graph &graph, NodeID end) const;
 };
 
 

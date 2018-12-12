@@ -10,6 +10,8 @@ bool operator==(const DPSOEdge &lhs, const DPSOEdge &rhs) {
 
 DPSOEdge operator*(DPSOEdge dpsoEdge, float scalar) {
     dpsoEdge.propability *= scalar;
+    if (dpsoEdge.propability > 1.0f)
+        dpsoEdge.propability = 1.0f;
     return dpsoEdge;
 }
 

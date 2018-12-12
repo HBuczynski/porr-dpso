@@ -56,6 +56,11 @@ int Graph::size() const {
     return static_cast<int>(nodes.size());
 }
 
+const Node &Graph::getNode(NodeID id) const {
+    assert(id < nodes.size() && "ID do not belong to graph");
+    return nodes[id];
+}
+
 const std::vector<Edge> &Graph::getEdges(const NodeID id) const {
     assert(id < nodes.size() && "ID do not belong to graph");
     return nodes[id].edges;

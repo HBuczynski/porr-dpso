@@ -8,6 +8,8 @@
 #include <random>
 #include <bits/unordered_set.h>
 #include <unordered_set>
+#include <cassert>
+#include <iostream>
 
 bool operator<(const Particle &lhs, const Particle &rhs) {
     return lhs.best_path_length < rhs.best_path_length;
@@ -58,10 +60,10 @@ void Particle::calculate_velocity(EdgesSet global_best_position, const DPSOConfi
 
     // inertion
     // temporary variable due to const iterator in for loop
-    EdgesSet new_velocity{};
+    EdgesSet new_velocity;
     for (auto &v : velocity)
         new_velocity.insert(v * config.swarm_inertion);
-    velocity = new_velocity;
+    velocity = std::move(new_velocity);
 
     // social
     for (const auto &e : position)
@@ -82,7 +84,7 @@ void Particle::calculate_new_position(const DPSOConfig &config) {
     std::mt19937 generator(random_device());
     std::uniform_real_distribution<> random(0.0, 1.0);
 
-    EdgesSet new_position{};
+    EdgesSet new_position;
 
     // Filter edges from velocity
     for (const auto &e : velocity) {
@@ -95,30 +97,88 @@ void Particle::calculate_new_position(const DPSOConfig &config) {
         if (random(generator) <= random(generator) * config.previous_pos_impact_coefficient)
             new_position.insert(e);
     }
-    position = new_position;
+
+    // remove duplicates, leaving only the highest probability
+    position.clear();
+    if (new_position.empty())
+        return;
+
+    auto current_best = *new_position.begin();
+    static_assert(std::is_same<EdgesSet, std::unordered_multiset<DPSOEdge>>::value);
+    for (const auto &e : new_position) {
+        if (current_best.edge == e.edge) {
+            if (current_best.propability < e.propability)
+                current_best = e;
+        } else {
+            position.insert(current_best);
+            current_best = e;
+        }
+    }
+    if (position.find(current_best) == position.end())
+        position.insert(current_best);
 }
 
-void Particle::close_new_path(const Graph &graph, NodeID begin, NodeID end) {
-    auto g = graph;
-    for (const auto de : position) {
-        g.change_edge_weight(de.edge.from, de.edge.to, 0.0f);
-        g.change_edge_weight(de.edge.to, de.edge.from, 0.0f);
-    }
+std::vector<DPSOEdge> Particle::build_ordered_path(const Graph &graph, const NodeID end) const {
+    auto pos = std::vector<DPSOEdge>();
+    pos.reserve(position.size());
+    for (const auto &p : position)
+        pos.push_back(p);
 
-    // TODO this alg in future should be changed to sth more random
-    auto path_finder = Astar(g, begin, end);
-    auto path = path_finder.solve();
+    auto distance_to_end = [&graph, end](DPSOEdge edge) {
+        auto d1 = graph.straight_line(end, edge.edge.from);
+        auto d2 = graph.straight_line(end, edge.edge.to);
+        return d1 < d2 ? d1 : d2;
+    };
 
-    for (auto i = 1u; i < path.size(); ++i) {
-        auto from = path[i - 1];
-        auto to = path[i];
+    std::sort(pos.begin(), pos.end(), [&distance_to_end](auto lhs, auto rhs) {
+        auto d1 = distance_to_end(lhs);
+        auto d2 = distance_to_end(rhs);
+        return d1 > d2;
+    });
+    return pos;
+}
 
-        const auto &edges = graph.getEdges(from);
-        auto edge = std::find_if(edges.begin(), edges.end(), [to](const auto &obj) {
-            return obj.to == to;
-        });
+void Particle::close_new_path(const Graph &graph, const NodeID begin, NodeID end) {
+    auto pos = build_ordered_path(graph, end);
 
-        position.insert(DPSOEdge{Edge{from, to, edge->weight}, 1.0});
+    while (true) {
+        auto last_iteration = false;
+        auto current_from = end;
+        auto current_to = begin;
+
+        if (!pos.empty()) {
+            DPSOEdge current = pos.back();
+            pos.pop_back();
+
+            assert(current.edge.from < static_cast<NodeID>(graph.size()) && "Domain constrain has been broken");
+            assert(current.edge.to < static_cast<NodeID>(graph.size()) && "Domain constrain has been broken");
+            current_from = current.edge.from;
+            current_to = current.edge.to;
+        } else {
+            last_iteration = true;
+        }
+
+        auto path_finder = Astar(graph, end, current_to);
+        auto path_patch = path_finder.solve();
+
+        for (auto i = 1u; i < path_patch.size(); ++i) {
+            auto from = path_patch[i - 1];
+            auto to = path_patch[i];
+
+            const auto &edges = graph.getEdges(from);
+            auto edge = std::find_if(edges.begin(), edges.end(), [to](const Edge &edge) {
+                return edge.to == to;
+            });
+            auto new_edge = DPSOEdge{Edge{from, to, edge->weight}, 1.0};
+
+            if (position.find(new_edge) == position.end())
+                position.insert(new_edge);
+        }
+
+        if (last_iteration)
+            break;
+
+        end = current_from;
     }
 
     update_best_position();
