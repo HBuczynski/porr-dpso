@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 set(PROJECT_NAME porr_dpso)
 project(${PROJECT_NAME})
 
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -22,3 +22,4 @@ file(GLOB source_list "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_S
                       "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp")
 
 add_executable(${PROJECT_NAME} ${source_list} ${header_list})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)

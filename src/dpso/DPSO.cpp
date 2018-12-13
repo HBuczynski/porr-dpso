@@ -21,7 +21,10 @@ void DPSO::solve() {
     update_best_position();
     for (auto i = 0; i < config.iterations; ++i) {
         std::cout << "Iteration=" << i << " gBest= " << best_path_length << "\n";
-        for (auto &particle : swarm) {
+#pragma omp parallel num_threads(8)
+#pragma omp for
+        for (int i = 0; i < swarm.size(); ++i) {
+            Particle &particle = swarm.at(i);
             particle.calculate_velocity(best_position, config);
             particle.calculate_new_position(config);
             particle.close_new_path(graph, begin, end);
