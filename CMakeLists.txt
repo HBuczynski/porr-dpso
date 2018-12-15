@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
+set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
 set(PROJECT_NAME porr_dpso)
 project(${PROJECT_NAME})
 
@@ -16,10 +17,18 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 #set(CMAKE_CXX_FLAGS_DEBUG "-g")
 #set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-add_compile_definitions(ENABLE_DRAWING)
+if(${MODE} STREQUAL PARARELL)
+    add_compile_definitions(PARARELL)
+endif()
+
+if(${DRAWING} STREQUAL TRUE)
+    add_compile_definitions(ENABLE_DRAWING)
+endif()
+
 
 file(GLOB source_list "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/dpso/*.cpp"
-                      "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp")
+                      "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp"
+                      "${CMAKE_CURRENT_SOURCE_DIR}/src/utility/*.cpp")
 
 add_executable(${PROJECT_NAME} ${source_list} ${header_list})
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)

@@ -18,6 +18,8 @@ struct DPSOConfig {
 
     std::string dataset_name = "OL";
     unsigned int number_of_nodes = 30;
+
+    bool detailLogs = false;
 };
 
 
