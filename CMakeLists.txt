@@ -19,8 +19,8 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
 if(${MODE} STREQUAL PARARELL)
     add_compile_definitions(PARARELL)
-elseif(${MODE} STREQUAL SYNCH)
-    add_compile_definitions(SYNCH)
+elseif(${MODE} STREQUAL SEQN)
+    add_compile_definitions(SEQN)
 endif()
 
 if(${DRAWING} STREQUAL TRUE)

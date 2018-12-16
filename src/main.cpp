@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     profiler.setMode("PARARELL");
 
     performanceTests.pararellTest(iterationCounter);
-#elif SYNCH
+#elif SEQN
     if (argc < 2)
     {
         cout << "You have to write test's iteration number as an input argument !!!" << endl;
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     }
     uint16_t iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
 
-    profiler.setMode("SYNCH");
+    profiler.setMode("SEQN");
     performanceTests.synchronizationTest(iterationCounter);
 #else
     performanceTests.functionalDPSOTest();

@@ -50,7 +50,6 @@ Graph UtahGraphLoader::load() {
     return graph;
 }
 
-///TODO:
 void UtahGraphLoader::load_nodes() {
     std::ifstream fs = getFileHandler(path + "_nodes.txt");
 

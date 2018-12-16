@@ -1,5 +1,6 @@
 #include "Profiler.h"
 
+#include <cassert>
 #include <numeric>
 #include <functional>
 #include <iostream>
@@ -15,9 +16,6 @@ Profiler::Profiler()
     : threadNumber_(1)
 {}
 
-Profiler::~Profiler()
-{}
-
 Profiler &Profiler::getInstance()
 {
     if (!instance_)
@@ -31,24 +29,24 @@ Profiler &Profiler::getInstance()
     return *instance_;
 }
 
-void Profiler::setStartPoint(const TimePoint& timePoint)
+void Profiler::registerStartPoint()
 {
-    startTimePoint_.push_back(timePoint);
+    startTimePoint_.push_back(system_clock::now());
 }
 
-void Profiler::setParallelisationStartPoint(const TimePoint& timePoint)
+void Profiler::registerParallelisationStartPoint()
 {
-    startParallelisationTimePoint_.push_back(timePoint);
+    startParallelisationTimePoint_.push_back(system_clock::now());
 }
 
-void Profiler::setParallelisationStopPoint(const TimePoint& timePoint)
+void Profiler::registerParallelisationStopPoint()
 {
-    stopParallelisationTimePoint_.push_back(timePoint);
+    stopParallelisationTimePoint_.push_back(system_clock::now());
 }
 
-void Profiler::setStopPoint(const TimePoint& timePoint)
+void Profiler::registerStopPoint()
 {
-    stopTimePoint_.push_back(timePoint);
+    stopTimePoint_.push_back(system_clock::now());
 }
 
 void Profiler::setThreadNumber(uint8_t number)
@@ -78,34 +76,24 @@ double Profiler::getLastCriticalLoopDuration() const
 
 double Profiler::getAvgTotalDuration() const
 {
-    if(startTimePoint_.size() != stopTimePoint_.size())
-    {
-        return 0;
-    }
-    else
-    {
-        vector<uint32_t> durations(startTimePoint_.size());
-        transform(startTimePoint_.begin(), startTimePoint_.end(), stopTimePoint_.begin(), durations.begin(),
-                [](const auto& x1_ele, const auto& x2_ele){ return duration_cast<milliseconds>(x2_ele - x1_ele).count();});
+    assert(startTimePoint_.size() != stopTimePoint_.size() && "Vectors have a different size.");
 
-        return accumulate(durations.begin(), durations.end(), 0)/durations.size();
-    }
+    vector<uint32_t> durations(startTimePoint_.size());
+    transform(startTimePoint_.begin(), startTimePoint_.end(), stopTimePoint_.begin(), durations.begin(),
+            [](const auto& x1_ele, const auto& x2_ele){ return duration_cast<milliseconds>(x2_ele - x1_ele).count();});
+
+    return accumulate(durations.begin(), durations.end(), 0)/durations.size();
 }
 
 double Profiler::getAvgCriticalLoopDuration() const
 {
-    if(startParallelisationTimePoint_.size() != stopParallelisationTimePoint_.size())
-    {
-        return 0;
-    }
-    else
-    {
-        vector<uint32_t> durations(startParallelisationTimePoint_.size());
-        transform(startParallelisationTimePoint_.begin(), startParallelisationTimePoint_.end(), stopParallelisationTimePoint_.begin(), durations.begin(),
-                [](const auto& x1_ele, const auto& x2_ele){ return duration_cast<milliseconds>(x2_ele - x1_ele).count();});
+    assert(startParallelisationTimePoint_.size() != stopParallelisationTimePoint_.size() && "Vectors have a different size.");
 
-        return accumulate(durations.begin(), durations.end(), 0)/durations.size();
-    }
+    vector<uint32_t> durations(startParallelisationTimePoint_.size());
+    transform(startParallelisationTimePoint_.begin(), startParallelisationTimePoint_.end(), stopParallelisationTimePoint_.begin(), durations.begin(),
+            [](const auto& x1_ele, const auto& x2_ele){ return duration_cast<milliseconds>(x2_ele - x1_ele).count();});
+
+    return accumulate(durations.begin(), durations.end(), 0)/durations.size();
 }
 
 double Profiler::getSynchronizationPartRatio() const
@@ -126,7 +114,7 @@ double Profiler::getSpeedUpCoefficientEstimation() const
 void Profiler::saveToFile()
 {
     ofstream file;
-    file.open((mode_ + string(".txt")).c_str(), std::fstream::in | std::fstream::out | std::fstream::app);
+    file.open((mode_ + string(".txt")).c_str(), std::fstream::out);
 
     file << "general_duration [ms]\t" << "loop_duration [ms]\n";
 

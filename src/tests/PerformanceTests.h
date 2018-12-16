@@ -8,13 +8,14 @@ class PerformanceTests
 {
 public:
     PerformanceTests();
-    ~PerformanceTests();
 
     void synchronizationTest(uint16_t iterationCounter) const;
     void pararellTest(uint16_t iterationCounter) const;
     void functionalDPSOTest() const;
 
 private:
+    void runRepeatedDPSO(uint16_t iterationCounter) const;
+
     Profiler &profiler_;
 };
 

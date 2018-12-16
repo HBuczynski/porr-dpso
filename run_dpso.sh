@@ -15,15 +15,15 @@ fi
     echo " "
 
 # Execute commands:
-if [ "$input" == "synch" ]; then
+if [ "$input" == "seqn" ]; then
 
-    echo "## Synchronization mode."
+    echo "## Sequential mode."
     echo "## - drawing is disabled"
     echo
 	echo "###########################################" 
 
     # Create build and binary files
-    cmake -DMODE="SYNCH" -DDRAWING="FALSE" . -B"${target_folder_name}"/build
+    cmake -DMODE="SEQN" -DDRAWING="FALSE" . -B"${target_folder_name}"/build
     cmake --build "${target_folder_name}"/build 
 
 elif [ "$input" == "pararell" ]; then   
@@ -45,7 +45,7 @@ elif [ "$input" == "help" ]; then
 	echo -----------------  HELP  --------------------
 	echo -- Chose one from the following command: --
 	echo 
-	echo " --- #synch        : synchronization mode" 
+	echo " --- #seqn         : Sequential mode" 
 	echo " --- #pararell     : pararellisation using OpenMP"
     echo " --- #without arg  : default mode with drawing graphs"
 	echo 
@@ -53,11 +53,11 @@ elif [ "$input" == "help" ]; then
 
 else
 
-    echo "## Default synchronization mode."
+    echo "## Default sequential mode."
     echo "## - drawing is enabled"
     echo 
 	echo "###########################################"
     # Create build and binary files
-    cmake -DMODE="SYNCH" -DDRAWING="TRUE" . -B"${target_folder_name}"/build
+    cmake -DMODE="DEFAULT" -DDRAWING="TRUE" . -B"${target_folder_name}"/build
     cmake --build "${target_folder_name}"/build
 fi

@@ -23,7 +23,7 @@ void DPSO::solve() {
     update_best_position();
 
     Profiler &profiler = Profiler::getInstance();
-    profiler.setParallelisationStartPoint(std::chrono::system_clock::now());
+    profiler.registerParallelisationStartPoint();
 
     for (auto i = 0; i < config.iterations; ++i) {
 
@@ -46,7 +46,7 @@ void DPSO::solve() {
         update_best_position();
     }
 
-    profiler.setParallelisationStopPoint(std::chrono::system_clock::now());
+    profiler.registerParallelisationStopPoint();
 }
 
 void DPSO::build_swarm() {

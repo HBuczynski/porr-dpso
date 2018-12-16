@@ -14,10 +14,10 @@ class Profiler
 public:
     static Profiler &getInstance();
 
-    void setStartPoint(const TimePoint& timePoint);
-    void setParallelisationStartPoint(const TimePoint& timePoint);
-    void setParallelisationStopPoint(const TimePoint& timePoint);
-    void setStopPoint(const TimePoint& timePoint);
+    void registerStartPoint();
+    void registerParallelisationStartPoint();
+    void registerParallelisationStopPoint();
+    void registerStopPoint();
 
     void setThreadNumber(uint8_t number);
     void setMode(const std::string& mode);
@@ -35,7 +35,6 @@ public:
 
 private:
     explicit Profiler();
-    ~Profiler();
 
     static Profiler *instance_;
     static std::mutex mutex_;
