@@ -14,10 +14,17 @@ int main(int argc, char *argv[]) {
     std::cout << "<< porr-dpso >>" << std::endl;
     Profiler &profiler = Profiler::getInstance();
 
+    if (argc < 2)
+    {
+        cout << "You have to write test's iteration number as an input argument !!!" << endl;
+        return 0;
+    }
+    uint16_t iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
+
 #ifdef PARARELL
     if (argc < 3)
     {
-        cout << "You have to write thread number as a second input argument !!!" << endl;
+        cout << "You have to write thread number as an second input argument !!!" << endl;
         return 0;
     }
     profiler.setThreadNumber(static_cast<uint8_t >(atoi(argv[2])));
@@ -25,8 +32,6 @@ int main(int argc, char *argv[]) {
 #else
     profiler.setMode("SYNCH");
 #endif
-
-    uint16_t iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
 
     for(uint16_t i=1; i<=10; ++i)
     {
@@ -45,9 +50,13 @@ int main(int argc, char *argv[]) {
         profiler.setStopPoint(std::chrono::system_clock::now());
         utahGraphLoader.show(solver.get_best_position());
 
-        cout << "General algorithm time: " << profiler.getAvgTotalDuration() << " [ms]" << endl;
-        cout << "Critical loop time: " << profiler.getAvgCriticalLoopDuration() << " [ms]" << endl;
+        cout << "General algorithm time: " << profiler.getLastTotalDuration() << " [ms]" << endl;
+        cout << "Critical loop time: " << profiler.getLastCriticalLoopDuration() << " [ms]" << endl;
     }
+
+    cout << "\n<< Summary: >>" << endl;
+    cout << "\t- avg general algorithm time: " << profiler.getAvgTotalDuration() << " [ms]" << endl;
+    cout << "\t- avg critical loop time: " << profiler.getAvgCriticalLoopDuration() << " [ms]" << endl;
 
     profiler.saveToFile();
 

@@ -11,14 +11,27 @@ if [ ! -d $target_folder_name ]; then
     mkdir $target_folder_name
 fi
 
+   	echo "###########################################"
+    echo " "
+
 # Execute commands:
 if [ "$input" == "synch" ]; then
+
+    echo "## Synchronization mode."
+    echo "## - drawing is disabled"
+    echo
+	echo "###########################################" 
 
     # Create build and binary files
     cmake -DMODE="SYNCH" -DDRAWING="FALSE" . -B"${target_folder_name}"/build
     cmake --build "${target_folder_name}"/build 
 
 elif [ "$input" == "pararell" ]; then   
+
+    echo "## Pararell mode using OpenMP."
+    echo "## - drawing is disabled"
+    echo 
+	echo "###########################################"
 
     # Create build and binary files
     cmake -DMODE="PARARELL" -DDRAWING="FALSE" . -B"${target_folder_name}"/build
@@ -29,8 +42,6 @@ elif [ "$input" == "clean" ]; then
 
 elif [ "$input" == "help" ]; then
 
-	echo "###########################################"
-    echo " "
 	echo -----------------  HELP  --------------------
 	echo -- Chose one from the following command: --
 	echo -------------------------------------------
@@ -39,8 +50,11 @@ elif [ "$input" == "help" ]; then
 	echo "###########################################"
 
 else
-   
-    echo "Default synchro."
+
+    echo "## Default synchronization mode."
+    echo "## - drawing is enabled"
+    echo 
+	echo "###########################################"
     # Create build and binary files
     cmake -DMODE="SYNCH" -DDRAWING="TRUE" . -B"${target_folder_name}"/build
     cmake --build "${target_folder_name}"/build

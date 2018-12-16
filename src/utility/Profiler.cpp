@@ -61,12 +61,22 @@ void Profiler::setMode(const string& mode)
     mode_ = mode;
 }
 
-uint8_t Profiler::getThreadNumber()
+uint8_t Profiler::getThreadNumber() const
 {
     return threadNumber_;
 }
 
-double Profiler::getAvgTotalDuration()
+double Profiler::getLastTotalDuration() const
+{
+    return duration_cast<milliseconds>(stopTimePoint_.back() - startTimePoint_.back()).count();
+}
+
+double Profiler::getLastCriticalLoopDuration() const
+{
+    return duration_cast<milliseconds>(stopParallelisationTimePoint_.back() - startParallelisationTimePoint_.back()).count();
+}
+
+double Profiler::getAvgTotalDuration() const
 {
     if(startTimePoint_.size() != stopTimePoint_.size())
     {
@@ -82,7 +92,7 @@ double Profiler::getAvgTotalDuration()
     }
 }
 
-double Profiler::getAvgCriticalLoopDuration()
+double Profiler::getAvgCriticalLoopDuration() const
 {
     if(startParallelisationTimePoint_.size() != stopParallelisationTimePoint_.size())
     {
@@ -114,4 +124,6 @@ void Profiler::saveToFile()
     }
 
     file.close();
+
+    cout << "\nSaved samples to file." << endl;
 }

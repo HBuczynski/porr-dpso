@@ -21,10 +21,13 @@ public:
 
     void setThreadNumber(uint8_t number);
     void setMode(const std::string& mode);
-    uint8_t getThreadNumber();
+    uint8_t getThreadNumber() const;
 
-    double getAvgTotalDuration();
-    double getAvgCriticalLoopDuration();
+    double getLastTotalDuration() const;
+    double getLastCriticalLoopDuration() const;
+
+    double getAvgTotalDuration() const;
+    double getAvgCriticalLoopDuration() const;
 
     void saveToFile();
 
