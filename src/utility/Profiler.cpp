@@ -76,7 +76,7 @@ double Profiler::getLastCriticalLoopDuration() const
 
 double Profiler::getAvgTotalDuration() const
 {
-    assert(startTimePoint_.size() != stopTimePoint_.size() && "Vectors have a different size.");
+    assert(startTimePoint_.size() == stopTimePoint_.size() && "Vectors have a different size.");
 
     vector<uint32_t> durations(startTimePoint_.size());
     transform(startTimePoint_.begin(), startTimePoint_.end(), stopTimePoint_.begin(), durations.begin(),
@@ -87,7 +87,7 @@ double Profiler::getAvgTotalDuration() const
 
 double Profiler::getAvgCriticalLoopDuration() const
 {
-    assert(startParallelisationTimePoint_.size() != stopParallelisationTimePoint_.size() && "Vectors have a different size.");
+    assert(startParallelisationTimePoint_.size() == stopParallelisationTimePoint_.size() && "Vectors have a different size.");
 
     vector<uint32_t> durations(startParallelisationTimePoint_.size());
     transform(startParallelisationTimePoint_.begin(), startParallelisationTimePoint_.end(), stopParallelisationTimePoint_.begin(), durations.begin(),
