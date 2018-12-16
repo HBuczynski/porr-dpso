@@ -10,7 +10,7 @@
 #include "../dpso/Particle.h"
 
 namespace {
-    std::string resources = "resources/";
+    std::string resources = "../../resources/";
 
     void assertOpenFile(const std::ifstream &fs) {
         if (!fs.is_open())
@@ -49,7 +49,6 @@ Graph UtahGraphLoader::load() {
     load_edges();
     return graph;
 }
-
 
 void UtahGraphLoader::load_nodes() {
     std::ifstream fs = getFileHandler(path + "_nodes.txt");
@@ -101,13 +100,13 @@ void UtahGraphLoader::show(std::optional<EdgesSet> path_to_show) const {
             selected_edges << " " << edge.edge.from << " " << edge.edge.to;
         }
 
-        execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
+        execl("../../tools/draw_graph_utah.py", "draw_graph_utah.py",
               path.c_str(),
               std::to_string(nodes_cnt).c_str(),
               selected_edges.str().c_str(),
               (char *) nullptr);
     } else {
-        execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
+        execl("../../tools/draw_graph_utah.py", "draw_graph_utah.py",
               path.c_str(),
               std::to_string(nodes_cnt).c_str(),
               (char *) nullptr);

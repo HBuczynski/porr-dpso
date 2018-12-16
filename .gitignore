@@ -5,4 +5,4 @@ cmake-build-debug/
 # Kubuntu
 .directory
 **/*.txt.kate-swp
-
+target/

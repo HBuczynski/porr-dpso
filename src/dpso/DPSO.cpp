@@ -4,6 +4,8 @@
 
 #include <cassert>
 #include <iostream>
+
+#include "../utility/Profiler.h"
 #include "DPSO.h"
 
 DPSO::DPSO(const Graph &graph, NodeID begin, NodeID end, DPSOConfig config)
@@ -19,11 +21,23 @@ DPSO::DPSO(const Graph &graph, NodeID begin, NodeID end, DPSOConfig config)
 void DPSO::solve() {
     build_swarm();
     update_best_position();
+
+    Profiler &profiler = Profiler::getInstance();
+    profiler.registerParallelisationStartPoint();
+
     for (auto i = 0; i < config.iterations; ++i) {
-        std::cout << "Iteration=" << i << " gBest= " << best_path_length << "\n";
-#pragma omp parallel num_threads(8)
-#pragma omp for
-        for (int i = 0; i < swarm.size(); ++i) {
+
+        if(config.detailLogs)
+        {
+            std::cout << "Iteration=" << i + 1 << "/" << config.iterations << " gBest= " << best_path_length << "\n";
+        }
+
+
+#ifdef PARARELL
+    #pragma omp parallel num_threads(profiler.getThreadNumber())
+    #pragma omp for
+#endif
+        for (uint32_t i = 0; i < swarm.size(); ++i) {
             Particle &particle = swarm.at(i);
             particle.calculate_velocity(best_position, config);
             particle.calculate_new_position(config);
@@ -31,6 +45,8 @@ void DPSO::solve() {
         }
         update_best_position();
     }
+
+    profiler.registerParallelisationStopPoint();
 }
 
 void DPSO::build_swarm() {
