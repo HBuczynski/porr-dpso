@@ -28,6 +28,8 @@ public:
 
     double getAvgTotalDuration() const;
     double getAvgCriticalLoopDuration() const;
+    double getSynchronizationPartRatio() const;
+    double getSpeedUpCoefficientEstimation() const;
 
     void saveToFile();
 

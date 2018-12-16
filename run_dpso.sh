@@ -44,9 +44,11 @@ elif [ "$input" == "help" ]; then
 
 	echo -----------------  HELP  --------------------
 	echo -- Chose one from the following command: --
-	echo -------------------------------------------
-	echo " --- #synchro      : " 
-	echo " --- #pararell     : "
+	echo 
+	echo " --- #synch        : synchronization mode" 
+	echo " --- #pararell     : pararellisation using OpenMP"
+    echo " --- #without arg  : default mode with drawing graphs"
+	echo 
 	echo "###########################################"
 
 else

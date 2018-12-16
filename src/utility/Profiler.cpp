@@ -108,6 +108,21 @@ double Profiler::getAvgCriticalLoopDuration() const
     }
 }
 
+double Profiler::getSynchronizationPartRatio() const
+{
+    const auto avgCriticalLoop = getAvgCriticalLoopDuration();
+    const auto avgTotalDuration = getAvgTotalDuration();
+
+    return (avgTotalDuration-avgCriticalLoop) / avgTotalDuration;
+}
+
+double Profiler::getSpeedUpCoefficientEstimation() const
+{
+    const auto betaCoefficient = getSynchronizationPartRatio();
+
+    return 1/(betaCoefficient+(1-betaCoefficient)/threadNumber_);
+}
+
 void Profiler::saveToFile()
 {
     ofstream file;

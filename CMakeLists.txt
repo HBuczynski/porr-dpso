@@ -19,6 +19,8 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
 if(${MODE} STREQUAL PARARELL)
     add_compile_definitions(PARARELL)
+elseif(${MODE} STREQUAL SYNCH)
+    add_compile_definitions(SYNCH)
 endif()
 
 if(${DRAWING} STREQUAL TRUE)
@@ -28,7 +30,7 @@ endif()
 
 file(GLOB source_list "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/dpso/*.cpp"
                       "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp"
-                      "${CMAKE_CURRENT_SOURCE_DIR}/src/utility/*.cpp")
+                      "${CMAKE_CURRENT_SOURCE_DIR}/src/utility/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/tests/*.cpp")
 
 add_executable(${PROJECT_NAME} ${source_list} ${header_list})
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
