@@ -10,7 +10,7 @@
 #include "../dpso/Particle.h"
 
 namespace {
-    std::string resources = "../../resources/";
+    std::string resources = "resources/";
 
     void assertOpenFile(const std::ifstream &fs) {
         if (!fs.is_open())
@@ -32,7 +32,7 @@ namespace {
 
 UtahGraphLoader::UtahGraphLoader(DPSOConfig config)
         : path(resources + config.dataset_name), graph(config.number_of_nodes),
-        nodes_cnt(config.number_of_nodes){
+          nodes_cnt(config.number_of_nodes) {
     std::ifstream fs = getFileHandler(path + "_nodes.txt");
 
     int id = -1;
@@ -100,18 +100,21 @@ void UtahGraphLoader::show(std::optional<EdgesSet> path_to_show) const {
             selected_edges << " " << edge.edge.from << " " << edge.edge.to;
         }
 
-        execl("../../tools/draw_graph_utah.py", "draw_graph_utah.py",
+        execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
               path.c_str(),
               std::to_string(nodes_cnt).c_str(),
               selected_edges.str().c_str(),
               (char *) nullptr);
     } else {
-        execl("../../tools/draw_graph_utah.py", "draw_graph_utah.py",
+        execl("tools/draw_graph_utah.py", "draw_graph_utah.py",
               path.c_str(),
               std::to_string(nodes_cnt).c_str(),
               (char *) nullptr);
     }
     std::cout << "Error in spawning tools process" << std::endl;
+#else
+    // suppress unused variable warning
+    (void) path_to_show;
 #endif
 }
 

@@ -10,37 +10,38 @@
 
 using namespace std;
 
-void performTest();
 
 int main(int argc, char *argv[]) {
-
     std::cout << "<< porr-dpso >>" << std::endl;
+
     Profiler &profiler = Profiler::getInstance();
     PerformanceTests performanceTests;
 
-#ifdef PARARELL
-    if (argc < 3)
-    {
+#ifdef MODE_PARALLEL
+    if (argc < 3) {
         cout << "You have to write iteration counter and thread number as input arguments !!!" << endl;
-        return 0;
+        return 1;
     }
-    uint16_t iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
-
     profiler.setThreadNumber(static_cast<uint8_t >(atoi(argv[2])));
-    profiler.setMode("PARARELL");
+    profiler.setMode("PARALLEL");
 
-    performanceTests.pararellTest(iterationCounter);
-#elif SEQN
-    if (argc < 2)
-    {
+    auto iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
+    performanceTests.parallelTest(iterationCounter);
+#elif defined(MODE_SEQN)
+    if (argc < 2) {
         cout << "You have to write test's iteration number as an input argument !!!" << endl;
-        return 0;
+        return 1;
     }
-    uint16_t iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
-
     profiler.setMode("SEQN");
+
+    auto iterationCounter = static_cast<uint16_t>(atoi(argv[1]));
     performanceTests.synchronizationTest(iterationCounter);
 #else
+    // suppress unused variable warnings
+    (void) argc;
+    (void) argv;
+    (void) profiler;
+
     performanceTests.functionalDPSOTest();
 #endif
 

@@ -1,36 +1,52 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
-set(PROJECT_NAME porr_dpso)
-project(${PROJECT_NAME})
+# PROJECT_NAME
+project(porr_dpso CXX)
 
 find_package(OpenMP REQUIRED)
-if (OPENMP_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
 
+# if cmake do not use new default value, remove CMakeCache.txt
+option(OPT_SEQN "enable sequential mode" OFF)
+option(OPT_PARALLEL "enable parallel mode" OFF)
+option(OPT_DRAWING "enable drawing" OFF)
+
+
+set(CMAKE_CXX_COMPILER /usr/bin/g++-7)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
-#set(CMAKE_CXX_FLAGS_DEBUG "-g")
-#set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+if (OPENMP_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif ()
 
-if(${MODE} STREQUAL PARARELL)
-    add_compile_definitions(PARARELL)
-elseif(${MODE} STREQUAL SEQN)
-    add_compile_definitions(SEQN)
+if(NOT WIN32)
+    string(ASCII 27 Esc)
+    set(ColourReset "${Esc}[m")
+    set(Green       "${Esc}[32m")
 endif()
 
-if(${DRAWING} STREQUAL TRUE)
+if (OPT_SEQN)
+    add_compile_definitions(MODE_SEQN)
+    message(STATUS "${Green}SEQUENTIAL MODE ACTIVE${ColourReset}")
+endif ()
+if (OPT_PARALLEL)
+    add_compile_definitions(MODE_PARALLEL)
+    message(STATUS "${Green}PARALEL MODE ACTIVE${ColourReset}")
+endif ()
+if (OPT_DRAWING)
     add_compile_definitions(ENABLE_DRAWING)
-endif()
+    message(STATUS "${Green}DRAWING ENABLED${ColourReset}")
+endif ()
 
-
-file(GLOB source_list "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/dpso/*.cpp"
-                      "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp"
-                      "${CMAKE_CURRENT_SOURCE_DIR}/src/utility/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/tests/*.cpp")
+file(GLOB source_list
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/dpso/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/graph/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/io/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/utility/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/tests/*.cpp")
 
 add_executable(${PROJECT_NAME} ${source_list} ${header_list})
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)

@@ -74,7 +74,7 @@ void Graph::change_edge_weight(NodeID from, NodeID to, float weight) {
     if (it == edges.end())
         throw std::domain_error("Edge should exist");
 
-     it->weight = weight;
+    it->weight = weight;
 }
 
 float Graph::straight_line(NodeID from, NodeID to) const {

@@ -4,13 +4,14 @@
 #include "../utility/Profiler.h"
 #include <cstdint>
 
-class PerformanceTests
-{
+class PerformanceTests {
 public:
     PerformanceTests();
 
     void synchronizationTest(uint16_t iterationCounter) const;
-    void pararellTest(uint16_t iterationCounter) const;
+
+    void parallelTest(uint16_t iterationCounter) const;
+
     void functionalDPSOTest() const;
 
 private:

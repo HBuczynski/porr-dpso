@@ -26,19 +26,16 @@ void DPSO::solve() {
     profiler.registerParallelisationStartPoint();
 
     for (auto i = 0; i < config.iterations; ++i) {
-
-        if(config.detailLogs)
-        {
+        if (config.detailLogs) {
             std::cout << "Iteration=" << i + 1 << "/" << config.iterations << " gBest= " << best_path_length << "\n";
         }
 
-
-#ifdef PARARELL
-    #pragma omp parallel num_threads(profiler.getThreadNumber())
-    #pragma omp for
+#ifdef MODE_PARALLEL
+#pragma omp parallel num_threads(profiler.getThreadNumber())
+#pragma omp for
 #endif
-        for (uint32_t i = 0; i < swarm.size(); ++i) {
-            Particle &particle = swarm.at(i);
+        for (uint32_t p = 0; p < swarm.size(); ++p) {
+            Particle &particle = swarm.at(p);
             particle.calculate_velocity(best_position, config);
             particle.calculate_new_position(config);
             particle.close_new_path(graph, begin, end);
