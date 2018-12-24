@@ -1,10 +1,7 @@
-#include <cassert>
 #include <iostream>
-#include <fstream>
+#include <sstream>
+#include <mpi/mpi.h>
 
-#include "graph/Graph.h"
-#include "io/UtahGraphLoader.h"
-#include "dpso/DPSO.h"
 #include "utility/Profiler.h"
 #include "tests/PerformanceTests.h"
 
@@ -12,12 +9,27 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
+#if defined(MODE_MPI)
+    MPI_Init(nullptr, nullptr);
+
+    int comm_size;
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    std::stringstream ss;
+    ss << "Hello world from process " << rank << " out of " << comm_size << std::endl;
+    std::cout << ss.str();
+
+    MPI_Finalize();
+#else
     std::cout << "<< porr-dpso >>" << std::endl;
 
     Profiler &profiler = Profiler::getInstance();
     PerformanceTests performanceTests;
 
-#ifdef MODE_PARALLEL
+#ifdef MODE_OPEN_MP
     if (argc < 3) {
         cout << "You have to write iteration counter and thread number as input arguments !!!" << endl;
         return 1;
@@ -44,6 +56,7 @@ int main(int argc, char *argv[]) {
 
     performanceTests.functionalDPSOTest();
 #endif
+#endif // defined(MODE_MPI)
 
     return 0;
 }

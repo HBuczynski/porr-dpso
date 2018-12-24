@@ -45,7 +45,7 @@ void PerformanceTests::functionalDPSOTest() const {
 
     auto dpso_config = DPSOConfig();
 
-#if !defined(MODE_SEQN) && !defined(MODE_PARALLEL)
+#if !defined(MODE_SEQN) && !defined(MODE_OPEN_MP)
     dpso_config.detailLogs = true;
 #endif
     auto solver = DPSO(graph, 6, 26, dpso_config);

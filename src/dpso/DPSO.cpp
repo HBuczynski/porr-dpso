@@ -30,7 +30,7 @@ void DPSO::solve() {
             std::cout << "Iteration=" << i + 1 << "/" << config.iterations << " gBest= " << best_path_length << "\n";
         }
 
-#ifdef MODE_PARALLEL
+#ifdef MODE_OPEN_MP
 #pragma omp parallel num_threads(profiler.getThreadNumber())
 #pragma omp for
 #endif
