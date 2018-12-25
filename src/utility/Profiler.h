@@ -11,7 +11,15 @@ using TimePoint = std::chrono::system_clock::time_point;
 
 class Profiler {
 public:
-    static Profiler &getInstance();
+    static Profiler &instance();
+
+    Profiler(const Profiler &) = delete;
+
+    Profiler(Profiler &&) = delete;
+
+    Profiler operator=(const Profiler &) = delete;
+
+    Profiler operator=(Profiler &&) = delete;
 
     void registerStartPoint();
 

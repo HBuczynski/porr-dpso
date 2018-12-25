@@ -22,7 +22,7 @@ void DPSO::solve() {
     build_swarm();
     update_best_position();
 
-    Profiler &profiler = Profiler::getInstance();
+    Profiler &profiler = Profiler::instance();
     profiler.registerParallelisationStartPoint();
 
     for (auto i = 0; i < config.iterations; ++i) {

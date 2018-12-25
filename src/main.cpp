@@ -1,7 +1,8 @@
 #include <iostream>
 #include <sstream>
-#include <mpi/mpi.h>
+#include <mpi.h>
 
+#include "utility/logger.h"
 #include "utility/Profiler.h"
 #include "tests/PerformanceTests.h"
 
@@ -9,24 +10,31 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
-#if defined(MODE_MPI)
-    MPI_Init(nullptr, nullptr);
+#ifdef MODE_MPI
+    MPI_STATUS(MPI_Init(nullptr, nullptr));
 
     int comm_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
+    MPI_STATUS(MPI_Comm_size(MPI_COMM_WORLD, &comm_size));
 
     int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_STATUS(MPI_Comm_rank(MPI_COMM_WORLD, &rank));
 
-    std::stringstream ss;
-    ss << "Hello world from process " << rank << " out of " << comm_size << std::endl;
-    std::cout << ss.str();
+    {
+        std::stringstream ss;
+        ss << "Starting porr_dpso from process " << rank << " out of " << comm_size << std::endl;
+        std::cout << ss.str() << std::flush;
+    }
 
-    MPI_Finalize();
+    MPI_STATUS(MPI_Barrier(MPI_COMM_WORLD));
+
+    // TODO fix me
+#define MODE_SEQN
+
 #else
     std::cout << "<< porr-dpso >>" << std::endl;
+#endif
 
-    Profiler &profiler = Profiler::getInstance();
+    Profiler &profiler = Profiler::instance();
     PerformanceTests performanceTests;
 
 #ifdef MODE_OPEN_MP
@@ -40,12 +48,13 @@ int main(int argc, char *argv[]) {
     auto iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
     performanceTests.parallelTest(iterationCounter);
 #elif defined(MODE_SEQN)
-    if (argc < 2) {
-        cout << "You have to write test's iteration number as an input argument !!!" << endl;
-        return 1;
-    }
-    profiler.setMode("SEQN");
-
+    ONLY_MPI_MASTER(
+            if (argc < 2) {
+                cout << "You have to write test's iteration number as an input argument !!!" << endl;
+                return 1;
+            }
+            profiler.setMode("SEQN");
+    );
     auto iterationCounter = static_cast<uint16_t>(atoi(argv[1]));
     performanceTests.synchronizationTest(iterationCounter);
 #else
@@ -56,7 +65,16 @@ int main(int argc, char *argv[]) {
 
     performanceTests.functionalDPSOTest();
 #endif
-#endif // defined(MODE_MPI)
+
+#if defined(MODE_MPI)
+    MPI_STATUS(MPI_Barrier(MPI_COMM_WORLD));
+
+    std::stringstream ss;
+    ss << "Finalizing porr_dpso from process " << rank << " out of " << comm_size << std::endl;
+    std::cout << ss.str();
+
+    MPI_Finalize();
+#endif
 
     return 0;
 }
