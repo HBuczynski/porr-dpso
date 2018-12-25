@@ -1,6 +1,11 @@
 #include <iostream>
+
+#ifdef MODE_MPI
+
 #include <sstream>
 #include <mpi.h>
+
+#endif
 
 #include "utility/logger.h"
 #include "utility/Profiler.h"
@@ -21,15 +26,11 @@ int main(int argc, char *argv[]) {
 
     {
         std::stringstream ss;
-        ss << "Starting porr_dpso from process " << rank << " out of " << comm_size << std::endl;
+        ss << "Starting porr_dpso from process " << rank << " out of " << comm_size << "\n";
         std::cout << ss.str() << std::flush;
     }
 
     MPI_STATUS(MPI_Barrier(MPI_COMM_WORLD));
-
-    // TODO fix me
-#define MODE_SEQN
-
 #else
     std::cout << "<< porr-dpso >>" << std::endl;
 #endif
@@ -38,17 +39,19 @@ int main(int argc, char *argv[]) {
     PerformanceTests performanceTests;
 
 #ifdef MODE_OPEN_MP
-    if (argc < 3) {
-        cout << "You have to write iteration counter and thread number as input arguments !!!" << endl;
-        return 1;
-    }
-    profiler.setThreadNumber(static_cast<uint8_t >(atoi(argv[2])));
-    profiler.setMode("PARALLEL");
+    ONLY_MASTER(
+            if (argc < 3) {
+                cout << "You have to write iteration counter and thread number as input arguments !!!" << endl;
+                return 1;
+            }
+            profiler.setMode("PARALLEL");
+    );
 
+    profiler.setThreadNumber(static_cast<uint8_t >(atoi(argv[2])));
     auto iterationCounter = static_cast<uint16_t >(atoi(argv[1]));
     performanceTests.parallelTest(iterationCounter);
 #elif defined(MODE_SEQN)
-    ONLY_MPI_MASTER(
+    ONLY_MASTER(
             if (argc < 2) {
                 cout << "You have to write test's iteration number as an input argument !!!" << endl;
                 return 1;

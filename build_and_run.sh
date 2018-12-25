@@ -31,14 +31,23 @@ elif [ "$mode" == "openmp" ]; then
 
     OPTIONS+="-DOPT_OPEN_MP=ON"
 
-elif [ "$mode" == "mpi" ]; then
+elif [ "$mode" == "mpi_seqn" ]; then
 
-    echo "## Parallel mode using MPI."
+    echo "## Parallel mode using MPI on seqn program."
     echo "## - drawing is disabled"
     echo -e "\n###########################################"
 
     RUN_WITH_MPI=true
-    OPTIONS+="-DOPT_MPI=ON"
+    OPTIONS+="-DOPT_MPI=ON -DOPT_SEQN=ON"
+
+elif [ "$mode" == "mpi_openmp" ]; then
+
+    echo "## Parallel mode using MPI on openmp program."
+    echo "## - drawing is disabled"
+    echo -e "\n###########################################"
+
+    RUN_WITH_MPI=true
+    OPTIONS+="-DOPT_MPI=ON -DOPT_OPEN_MP=ON"
 
 elif [ "$mode" == "clean" ]; then
 
@@ -63,7 +72,8 @@ else
 	echo
 	echo "--- #seqn         : Sequential mode"
 	echo "--- #openmp       : parallelization using OpenMP"
-	echo "--- #mpi          : parallelization using MPI"
+	echo "--- #mpi_seqn     : parallelization using MPI on seqn program"
+	echo "--- #mpi_openmp   : parallelization using MPI on openmp program"
     echo "--- #default      : default mode with drawing graphs"
     echo " "
     echo -e "After mode provide argument for program execution in specific mode\n"
@@ -80,6 +90,11 @@ cmake --build "${target_folder_name}"/build
 # Execute program
 echo -e "\n\nExecute:\n\n"
 if [ ${RUN_WITH_MPI} ]; then
+    if [ -z "$2" ]; then
+        echo -e "Please provide number of processes as argument\n"
+        exit 2
+    fi
+
     PROCESS_CNT=$2
     mpirun -np ${PROCESS_CNT} ./target/build/porr_dpso ${@:3}
 else

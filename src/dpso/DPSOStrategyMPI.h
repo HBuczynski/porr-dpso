@@ -14,7 +14,12 @@ public:
 
 private:
     void update_best_position() override;
-    int find_best_path_owner();
+
+    int find_best_path_owner() const;
+
+    int get_new_path_edges_cnt(int owner_id) const;
+
+    void share_and_update_best_position(int owner_id, int edges_cnt);
 
     int comm_size;
     int rank;

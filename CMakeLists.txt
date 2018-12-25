@@ -6,8 +6,7 @@ project(porr_dpso CXX)
 # if cmake do not use new default value, remove CMakeCache.txt
 option(OPT_SEQN "enable sequential mode" OFF)
 option(OPT_OPEN_MP "enable OpenMP mode" OFF)
-# TODO turn it off
-option(OPT_MPI "enable MPI mode" ON)
+option(OPT_MPI "enable MPI mode" OFF)
 
 option(OPT_DRAWING "enable drawing" OFF)
 
