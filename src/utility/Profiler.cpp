@@ -15,7 +15,7 @@ mutex Profiler::mutex_;
 Profiler::Profiler()
         : threadNumber_(1) {}
 
-Profiler &Profiler::instance() {
+Profiler &Profiler::getInstance() {
     if (!instance_) {
         lock_guard<mutex> lock(mutex_);
         if (!instance_) {

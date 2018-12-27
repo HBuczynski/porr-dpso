@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     std::cout << "<< porr-dpso >>" << std::endl;
 #endif
 
-    Profiler &profiler = Profiler::instance();
+    Profiler &profiler = Profiler::getInstance();
     PerformanceTests performanceTests;
 
 #ifdef MODE_OPEN_MP

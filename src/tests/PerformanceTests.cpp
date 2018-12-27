@@ -12,7 +12,7 @@
 using namespace std;
 
 PerformanceTests::PerformanceTests()
-        : profiler_(Profiler::instance()) {}
+        : profiler_(Profiler::getInstance()) {}
 
 void PerformanceTests::synchronizationTest(uint16_t iterationCounter) const {
     runRepeatedDPSO(iterationCounter);
@@ -52,7 +52,7 @@ void PerformanceTests::functionalDPSOTest() const {
     ONLY_MASTER(
             profiler_.registerStartPoint();
     );
-    auto &utahGraphLoader = UtahGraphLoader::instance();
+    auto &utahGraphLoader = UtahGraphLoader::getInstance();
     auto graph = utahGraphLoader.load();
     graph.consolidate();
     ONLY_MASTER(

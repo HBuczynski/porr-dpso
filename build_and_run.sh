@@ -70,11 +70,15 @@ else
 	echo -----------------  HELP  --------------------
 	echo -- Chose one from the following command: --
 	echo
-	echo "--- #seqn         : Sequential mode"
-	echo "--- #openmp       : parallelization using OpenMP"
-	echo "--- #mpi_seqn     : parallelization using MPI on seqn program"
-	echo "--- #mpi_openmp   : parallelization using MPI on openmp program"
-    echo "--- #default      : default mode with drawing graphs"
+	echo "seqn              : Sequential mode"
+	echo "    Call arguments: seqn [tests number]"
+	echo "openmp            : parallelization using OpenMP"
+	echo "    Call arguments: openmp [tests number] [OpenMP threads number]"
+	echo "mpi_seqn          : parallelization using MPI on seqn program"
+	echo "    Call arguments: mpi_seqn [MPI nodes number] [tests number]"
+	echo "mpi_openmp        : parallelization using MPI on openmp program"
+    echo "    Call arguments: mpi_openmp [MPI nodes number] [tests number] [OpenMP threads number]"
+    echo "default           : default mode with drawing graphs"
     echo " "
     echo -e "After mode provide argument for program execution in specific mode\n"
     echo "In case of unexpected behaviour run clean"

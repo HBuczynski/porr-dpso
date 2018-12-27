@@ -24,7 +24,7 @@ public:
 
     void show(std::optional<EdgesSet> path_to_show = std::nullopt) const;
 
-    static UtahGraphLoader &instance() {
+    static UtahGraphLoader &getInstance() {
         static UtahGraphLoader instance = UtahGraphLoader(DPSOConfig());
         return instance;
     }
