@@ -19,20 +19,19 @@ public:
 
     void solve();
 
-private:
-    const Graph graph;
-    Swarm swarm;
-    EdgesSet best_position;
-public:
     const EdgesSet &get_best_position() const;
 
-private:
+protected:
+    virtual void update_best_position();
+
+    EdgesSet best_position;
     float best_path_length = std::numeric_limits<float>::max();
 
+private:
     void build_swarm();
 
-    void update_best_position();
-
+    const Graph graph;
+    Swarm swarm;
     NodeID begin;
     NodeID end;
     const DPSOConfig config;

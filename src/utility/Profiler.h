@@ -13,6 +13,14 @@ class Profiler {
 public:
     static Profiler &getInstance();
 
+    Profiler(const Profiler &) = delete;
+
+    Profiler(Profiler &&) = delete;
+
+    Profiler operator=(const Profiler &) = delete;
+
+    Profiler operator=(Profiler &&) = delete;
+
     void registerStartPoint();
 
     void registerParallelisationStartPoint();

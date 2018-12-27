@@ -12,11 +12,19 @@
 
 class UtahGraphLoader {
 public:
+    UtahGraphLoader(const UtahGraphLoader &) = delete;
+
+    UtahGraphLoader(UtahGraphLoader &&) = delete;
+
+    UtahGraphLoader operator=(const UtahGraphLoader &) = delete;
+
+    UtahGraphLoader operator=(UtahGraphLoader &&) = delete;
+
     Graph load();
 
     void show(std::optional<EdgesSet> path_to_show = std::nullopt) const;
 
-    static UtahGraphLoader &get_instance() {
+    static UtahGraphLoader &getInstance() {
         static UtahGraphLoader instance = UtahGraphLoader(DPSOConfig());
         return instance;
     }
