@@ -31,26 +31,18 @@ namespace {
 }
 
 UtahGraphLoader::UtahGraphLoader(DPSOConfig config)
-        : path(resources + config.dataset_name), graph(config.number_of_nodes),
-          nodes_cnt(config.number_of_nodes) {
-    std::ifstream fs = getFileHandler(path + "_nodes.txt");
-
-    int id = -1;
-    float x, y;
-    while (fs) {
-        fs >> id >> x >> y;
-    }
-    graph = Graph(nodes_cnt);
-}
+        : path(resources + config.dataset_name),
+          nodes_cnt(config.number_of_nodes) {}
 
 
 Graph UtahGraphLoader::load() {
-    load_nodes();
-    load_edges();
+    Graph graph(nodes_cnt);
+    load_nodes(graph);
+    load_edges(graph);
     return graph;
 }
 
-void UtahGraphLoader::load_nodes() {
+void UtahGraphLoader::load_nodes(Graph &graph) {
     std::ifstream fs = getFileHandler(path + "_nodes.txt");
 
     NodeID id;
@@ -66,7 +58,7 @@ void UtahGraphLoader::load_nodes() {
     fs.close();
 }
 
-void UtahGraphLoader::load_edges() {
+void UtahGraphLoader::load_edges(Graph &graph) {
     std::ifstream fs = getFileHandler(path + "_edges.txt");
 
     NodeID id;

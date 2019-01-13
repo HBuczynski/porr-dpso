@@ -54,16 +54,25 @@ uint8_t Profiler::getThreadNumber() const {
 }
 
 double Profiler::getLastTotalDuration() const {
+    assert(startTimePoint_.size() == stopTimePoint_.size() && "Vectors have a different size.");
+    if (stopTimePoint_.empty())
+        return 0.0;
     return duration_cast<milliseconds>(stopTimePoint_.back() - startTimePoint_.back()).count();
 }
 
 double Profiler::getLastCriticalLoopDuration() const {
+    assert(stopParallelisationTimePoint_.size() == stopParallelisationTimePoint_.size() &&
+           "Vectors have a different size.");
+    if (stopParallelisationTimePoint_.empty())
+        return 0.0;
     return duration_cast<milliseconds>(
             stopParallelisationTimePoint_.back() - startParallelisationTimePoint_.back()).count();
 }
 
 double Profiler::getAvgTotalDuration() const {
     assert(startTimePoint_.size() == stopTimePoint_.size() && "Vectors have a different size.");
+    if (startTimePoint_.empty())
+        return 0.0;
 
     vector<uint32_t> durations(startTimePoint_.size());
     transform(startTimePoint_.begin(), startTimePoint_.end(), stopTimePoint_.begin(), durations.begin(),
@@ -77,6 +86,8 @@ double Profiler::getAvgTotalDuration() const {
 double Profiler::getAvgCriticalLoopDuration() const {
     assert(startParallelisationTimePoint_.size() == stopParallelisationTimePoint_.size() &&
            "Vectors have a different size.");
+    if (startParallelisationTimePoint_.empty())
+        return 0.0;
 
     vector<uint32_t> durations(startParallelisationTimePoint_.size());
     transform(startParallelisationTimePoint_.begin(), startParallelisationTimePoint_.end(),
@@ -112,8 +123,11 @@ void Profiler::saveToFile() {
     for (uint16_t i = 0; i < startTimePoint_.size(); ++i) {
         file << duration_cast<milliseconds>(stopTimePoint_[i] - startTimePoint_[i]).count();
         file << "\t";
-        file << duration_cast<milliseconds>(
-                stopParallelisationTimePoint_[i] - startParallelisationTimePoint_[i]).count();
+        double diff = 0.0;
+        if (!stopParallelisationTimePoint_.empty())
+            diff = duration_cast<milliseconds>(
+                    stopParallelisationTimePoint_[i] - startParallelisationTimePoint_[i]).count();
+        file << diff;
         file << "\n";
     }
 

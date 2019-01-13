@@ -33,12 +33,11 @@ private:
     explicit UtahGraphLoader(DPSOConfig config);
 
     const std::string path;
-    Graph graph;
     unsigned int nodes_cnt;
 
-    void load_nodes();
+    void load_nodes(Graph &graph);
 
-    void load_edges();
+    void load_edges(Graph &graph);
 };
 
 
